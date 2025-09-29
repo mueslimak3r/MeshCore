@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include "TDeckBoard.h"
 
+#define TX_LED_ON LOW
+#define TX_LED_OFF HIGH
+
 uint32_t deviceOnline = 0x00;
 
 void TDeckBoard::begin() {
@@ -11,15 +14,18 @@ void TDeckBoard::begin() {
   pinMode(PIN_PERF_POWERON, OUTPUT);
   digitalWrite(PIN_PERF_POWERON, HIGH);
 
+  delay(500);
+
   // Configure user button
   pinMode(PIN_USER_BTN, INPUT);
-
+  // end keyboard init
+  
   // Configure LoRa Pins
   pinMode(P_LORA_MISO, INPUT_PULLUP);
   // pinMode(P_LORA_DIO_1, INPUT_PULLUP);
 
   #ifdef P_LORA_TX_LED
-    digitalWrite(P_LORA_TX_LED, HIGH); // inverted pin for SX1276 - HIGH for off
+    digitalWrite(P_LORA_TX_LED, TX_LED_OFF); // inverted pin for SX1276 - HIGH for off
   #endif
 
   esp_reset_reason_t reason = esp_reset_reason();
@@ -32,4 +38,5 @@ void TDeckBoard::begin() {
     rtc_gpio_hold_dis((gpio_num_t)P_LORA_NSS);
     rtc_gpio_deinit((gpio_num_t)P_LORA_DIO_1);
   }
+  
 }
